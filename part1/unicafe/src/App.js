@@ -8,10 +8,10 @@ const Button = ({onClick, text}) => {
   )
 }
 
-const Feedback = ({text, score}) => {
+const StatisticLine = ({text, value}) => {
   return (
     <div>
-      {text} {score}
+      {text} {value}
     </div>
   )
 }
@@ -41,12 +41,12 @@ const Statistics = ({good, bad, neutral}) => {
 
   return (
     <>
-      <Feedback text="good" score={good} />
-      <Feedback text="neutral" score={neutral} />
-      <Feedback text="bad" score={bad} />
-      <Feedback text="all" score={good+bad+neutral} />
-      <Feedback text="average" score={avg()} />
-      <Feedback text="positive" score={positive()} />
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={good+bad+neutral} />
+      <StatisticLine text="average" value={avg()} />
+      <StatisticLine text="positive" value={positive()} />
     </>
   )
 }
