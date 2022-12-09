@@ -31,6 +31,14 @@ const Statistics = ({good, bad, neutral}) => {
     return ((good) / (good+bad+neutral) * 100).toString() + " %"
   }
 
+  if (good+bad+neutral === 0){
+    return (
+      <>
+        <h4>No feedback given</h4>
+      </>
+    )
+  }
+
   return (
     <>
       <Feedback text="good" score={good} />
