@@ -22,7 +22,22 @@ const Field = ({text, value, onChange}) => {
   )
 }
 
+const PersonForm = ({handleSubmit, newName, handleNewName, newNumber, handleNewNumber}) => {
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <Field text="name" value={newName} onChange={handleNewName} />
+        <Field text="number" value={newNumber} onChange={handleNewNumber} />
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </>
+  )
+}
+
 const App = () => {
+  // Variables
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '1-234-5678', id:0 },
     { name: 'arto Hellas', number: '2-234-5678', id:1 },
@@ -37,6 +52,7 @@ const App = () => {
 
   const personsToShown = query.length === 0? persons: persons.filter((x)=>x.name.toLowerCase().includes(query.toLowerCase()))
 
+  // Callback func
   const handleNewName = (event) => {
     setNewName(event.target.value)
   }
@@ -61,19 +77,16 @@ const App = () => {
     }
   }
 
+  // Component
   return (
     <div>
       <h2>Phonebook</h2>
-        <Field text="filter shown with" value={query} onChange={handleQuery} />
+      <Field text="filter shown with" value={query} onChange={handleQuery} />
 
       <h2>Add a new</h2>
-      <form onSubmit={handleSubmit}>
-        <Field text="name" value={newName} onChange={handleNewName} />
-        <Field text="number" value={newNumber} onChange={handleNewNumber} />
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm handleSubmit={handleSubmit} 
+                  newName={newName} handleNewName={handleNewName} 
+                  newNumber={newNumber} handleNewNumber={handleNewNumber} />
 
       <h2>Numbers</h2>
       <ListPerson persons={personsToShown} />
