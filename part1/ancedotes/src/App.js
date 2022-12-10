@@ -8,6 +8,18 @@ const Button = ({text, callback}) => {
   )
 }
 
+const ShowAnecdote = ({anecdotes, scores, selected}) => {
+  return (
+    <>
+      <h2>Anecdote of the day</h2>
+      {anecdotes[selected]}
+      <br />
+      has {scores[selected]} votes.
+      <br />
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -20,6 +32,7 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [bestScore, setBestScore] = useState(0)
   const [scores, setScores] = useState(Array(anecdotes.length).fill(0))
 
   const randomSelect = () => {
@@ -36,16 +49,15 @@ const App = () => {
     const new_scores = [...scores]
     new_scores[selected] += 1
     setScores(new_scores)
+    setBestScore(new_scores.indexOf(Math.max(...new_scores)))
   }
 
   return (
     <div>
-      {anecdotes[selected]}
-      <br />
-      has {scores[selected]} votes.
-      <br />
+      <ShowAnecdote anecdotes={anecdotes} scores={scores} selected={selected} />
       <Button text="vote" callback={vote} />
       <Button text="next anecdote" callback={randomSelect} />
+      <ShowAnecdote anecdotes={anecdotes} scores={scores} selected={bestScore} />
     </div>
   )
 }
