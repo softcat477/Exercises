@@ -19,14 +19,14 @@ const StatisticLine = ({text, value}) => {
 
 const Statistics = ({good, bad, neutral}) => {
   const avg = () => {
-    if (good+bad+neutral == 0){
+    if (good+bad+neutral === 0){
       return 0.0
     }
     return (good-bad)/(good+bad+neutral)
   }
 
   const positive = () => {
-    if (good+bad+neutral == 0){
+    if (good+bad+neutral === 0){
       return "0 %"
     }
     return ((good) / (good+bad+neutral) * 100).toString() + " %"
