@@ -1,4 +1,21 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import ShowDetail from "./showdetail"
+
+const SingleCountry = ({country}) => {
+    const [isOpened, setIsOpened] = useState(false)
+    return (
+        <>
+            <div>{country.name.common + " "} 
+                <button onClick={() => setIsOpened(!isOpened)}>
+                    {isOpened? "Close": "Open"}
+                </button>
+            </div>
+            {isOpened && 
+                <ShowDetail resultList={[country]} />
+            }
+        </>
+    )
+}
 
 const ListCountries = ({query, countryList, resultList, setResultList}) => {
     const searchCountries = () => {
@@ -27,11 +44,12 @@ const ListCountries = ({query, countryList, resultList, setResultList}) => {
       )
     }
     else{
-      return (
-        <>
-          {resultList.map((x) => <div key={x.name.common}>{x.name.common}</div>)}
-        </>
-      )
+        //{resultList.map((x) => <div key={x.name.common}>{x.name.common} button_placeholder</div>)}
+        return (
+            <>
+                {resultList.map((x) => <SingleCountry key={x.name.common} country={x} />)}
+            </>
+        )
     }
 }
 
