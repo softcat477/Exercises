@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const ListPerson = ({persons}) => {
   return (
@@ -38,19 +39,21 @@ const PersonForm = ({handleSubmit, newName, handleNewName, newNumber, handleNewN
 
 const App = () => {
   // Variables
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '1-234-5678', id:0 },
-    { name: 'arto Hellas', number: '2-234-5678', id:1 },
-    { name: 'armo Hellas', number: '3-234-5678', id:2 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 3 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 4 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 5 }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('') // Control the form input element
   const [newNumber, setNewNumber] = useState("")
   const [query, setQuery] = useState("")
 
   const personsToShown = query.length === 0? persons: persons.filter((x)=>x.name.toLowerCase().includes(query.toLowerCase()))
+
+  // Get data from db.json
+  useEffect(() => {
+    axios.get("http://localhost:3001/phonebook")
+         .then(response => {
+          console.log("promise fulfilled and get: ", response.data)
+          setPersons(response.data)
+         })
+  }, [])
 
   // Callback func
   const handleNewName = (event) => {
