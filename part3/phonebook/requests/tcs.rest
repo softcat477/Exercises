@@ -1,0 +1,5 @@
+### Get the whole phonebook
+GET http://localhost:3001/api/persons
+
+### Get the summary
+GET http://localhost:3001/info
