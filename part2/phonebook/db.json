@@ -1,10 +1,39 @@
 {
   "phonebook": [
-    { "name": "Arto Hellas", "number": "1-234-5678", "id":0 },
-    { "name": "arto Hellas", "number":"2-234-5678", "id":1 },
-    { "name": "armo Hellas", "number":"3-234-5678", "id":2 },
-    { "name": "Ada Lovelace", "number":"39-44-5323523", "id": 3 },
-    { "name": "Dan Abramov", "number":"12-43-234345", "id": 4 },
-    { "name": "Mary Poppendieck", "number": "39-23-6423122", "id": 5 }
+    {
+      "name": "Arto Hellas",
+      "number": "1-234-5678",
+      "id": 1
+    },
+    {
+      "name": "arto Hellas",
+      "number": "2-234-5678",
+      "id": 2
+    },
+    {
+      "name": "armo Hellas",
+      "number": "3-234-5678",
+      "id": 3
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": 4
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": 5
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 6
+    },
+    {
+      "name": "Ner Person B",
+      "number": "11-235-1246",
+      "id": 8
+    }
   ]
 }
