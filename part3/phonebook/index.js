@@ -2,6 +2,26 @@ const express = require("express")
 const app = express()
 app.use(express.json())
 
+// Use morgan to log
+//   <HTTP method> <endpoint url> <response status> <content length> <response time> <if POST, sent data>
+const morgan = require('morgan')
+morgan.token("json", function (req, res){return JSON.stringify(req.body)})
+app.use(morgan(function (tokens, req, res) {
+    let ret_str = [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms',
+      ].join(' ')
+
+    if (tokens.method(req, res) === "POST"){
+        ret_str = ret_str.concat(" " + tokens.json(req, res))
+    }
+
+    return ret_str
+  }))
+
 let phonebook = [
     { 
       "id": 1,
