@@ -1,8 +1,31 @@
 import { useState, useEffect } from 'react'
 import personServices from "./services/person"
 
-const ListPerson = ({persons, deletePerson}) => {
+const Message = ({message}) => {
+  if (message == null){
+    return (null)
+  }
 
+  const message_style = {
+    color: "red",
+    background: "lightgrey",
+    fontSize: 20,
+    borderStyle: "solid",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  }
+
+  return (
+    <>
+    <div style={message_style}>
+      {message}
+    </div>
+    </>
+  )
+}
+
+const ListPerson = ({persons, deletePerson}) => {
   // Show person in the phonebook
   return (
     <>
@@ -31,6 +54,9 @@ const Field = ({text, value, onChange}) => {
 }
 
 const PersonForm = ({handleSubmit, newName, handleNewName, newNumber, handleNewNumber}) => {
+  // Usage:
+  //   name: []
+  //   number: []
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -50,6 +76,7 @@ const App = () => {
   const [newName, setNewName] = useState('') // Control the form input element
   const [newNumber, setNewNumber] = useState("")
   const [query, setQuery] = useState("")
+  const [message, setMessage] = useState()
 
   // Use query to filter person to show
   const personsToShown = query.length === 0? persons: persons.filter((x)=>x.name.toLowerCase().includes(query.toLowerCase()))
@@ -90,6 +117,10 @@ const App = () => {
         personServices.updatePerson(changed_person.id, changed_person)
                        .then(returned_person => {
                         setPersons(persons.map(p => p.name === newName? returned_person: p))
+                        setMessage(`Update ${returned_person.name}`)
+                        setTimeout(() => {
+                          setMessage(null)
+                        }, 5000)
                         setNewNumber("")
                         setNewName("")
                        })
@@ -102,6 +133,10 @@ const App = () => {
       personServices.createNew(new_person)
                     .then(ret_new_person => {
                       setPersons(persons.concat(ret_new_person))
+                      setMessage(`Add ${ret_new_person.name}`)
+                      setTimeout(() => {
+                        setMessage(null)
+                      }, 5000)
                       setNewNumber("")
                       setNewName("")
                     })
@@ -118,7 +153,10 @@ const App = () => {
                     })
                     .catch( error => {
                       const ghost = persons.filter(x => x.id === id)
-                      alert (`Cannot delete ${ghost[0].name}`)
+                      setMessage(`Information of ${ghost[0].name} has already been removed from server`)
+                        setTimeout(() => {
+                          setMessage(null)
+                        }, 5000)
                       const new_persons = persons.filter(x => x.id !== id)
                       setPersons(new_persons)
                     })
@@ -129,6 +167,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Message message={message} />
       <Field text="filter shown with" value={query} onChange={handleQuery} />
 
       <h2>Add a new</h2>

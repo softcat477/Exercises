@@ -34,6 +34,11 @@
       "name": "Ner Person B",
       "number": "11-235-1246",
       "id": 8
+    },
+    {
+      "name": "New Person C",
+      "number": "22-12-4978612",
+      "id": 9
     }
   ]
 }

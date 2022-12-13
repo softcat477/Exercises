@@ -4,7 +4,11 @@ const baseUrl = 'http://localhost:3001/phonebook'
 // Get: Get all person
 const getAll = () => {
     const request = axios.get(baseUrl)
-    return request.then((response) => response.data.concat())
+    return request.then((response) => response.data.concat({
+        "name": "ghost",
+        "number": "wo-woo-woooo",
+        "id": 1921
+      }))
 }
 
 // Post: Create a new person
