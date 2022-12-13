@@ -53,6 +53,23 @@ app.delete("/api/persons/:id", (request, response) => {
     response.status(204).end()
 })
 
+app.post("/api/persons", (request, response) => {
+    const body = request.body
+
+    if (!body.name || !body.number){
+        response.send('Content missing. Get ' + JSON.stringify(body))
+    }
+    else{
+        const new_person = {
+            name: body.name,
+            number: body.number,
+            id:Math.floor(Math.random()*1e5)
+        }
+        phonebook = phonebook.concat(new_person)
+        response.json(new_person)
+    }
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

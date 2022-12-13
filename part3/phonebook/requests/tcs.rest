@@ -12,3 +12,22 @@ GET http://localhost:3001/api/persons/1011
 
 ### Delete a person
 DELETE http://localhost:3001/api/persons/1
+
+### Add a person
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name":"Sara",
+    "number": "123-456-7890",
+    "animal": "cat"
+}
+
+### Add a person without sufficient content
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name":"Woopsy",
+    "animal": "cat"
+}
