@@ -24,17 +24,17 @@ let phonebook = [
       "number": "39-23-6423122"
     }
 ]
-
+// fetch all
 app.get("/api/persons", (request, response) => {
     response.json(phonebook)
 } )
-
+// get metadata
 app.get("/info", (request, response) => {
     const msg = `Phonebook has info for ${phonebook.length} people.`
     const time = new Date() 
     response.send(`<p>${msg}</p><p>${time}</p>`)
 } )
-
+// fetch a person
 app.get("/api/persons/:id", (request, response) => {
     const req_id = Number(request.params.id)
     const req_person = phonebook.find(x => x.id === req_id)
@@ -45,21 +45,26 @@ app.get("/api/persons/:id", (request, response) => {
         response.status(404).end()
     }
 })
-
+// Delete a person
 app.delete("/api/persons/:id", (request, response) => {
     const req_id = Number(request.params.id)
     phonebook = phonebook.filter(x => x.id !== req_id)
 
     response.status(204).end()
 })
-
+// Add a person
 app.post("/api/persons", (request, response) => {
     const body = request.body
 
     if (!body.name || !body.number){
-        response.send('Content missing. Get ' + JSON.stringify(body))
+        return response.status(400).json({
+            error: 'Content missing.'})
     }
     else{
+        if(phonebook.find(x => x.name === body.name)){
+            return response.status(400).json({
+                error: 'Name must be unique.'})
+        }
         const new_person = {
             name: body.name,
             number: body.number,
