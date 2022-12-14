@@ -26,6 +26,9 @@ app.use(morgan(function (tokens, req, res) {
 const cors = require("cors")
 app.use(cors())
 
+// Middleware: Serve static files from the backend
+app.use(express.static("build"))
+
 let phonebook = [
     { 
       "id": 1,
