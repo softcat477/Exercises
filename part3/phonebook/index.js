@@ -1,3 +1,10 @@
+// For env vars defining the database URL and port
+require("dotenv").config()
+
+// To MongoDB database
+const Person = require("./models/person")
+
+// For REST API
 const express = require("express")
 const app = express()
 app.use(express.json())
@@ -29,6 +36,7 @@ app.use(cors())
 // Middleware: Serve static files from the backend
 app.use(express.static("build"))
 
+/*
 let phonebook = [
     { 
       "id": 1,
@@ -51,9 +59,14 @@ let phonebook = [
       "number": "39-23-6423122"
     }
 ]
-// fetch all
+*/
+
+// fetch all and return saved phonebook from MongoDB
 app.get("/api/persons", (request, response) => {
-    response.json(phonebook)
+    // Return saved phonebook
+    Person.find({}).then(phonebook => {
+        response.json(phonebook)
+    })
 } )
 // get metadata
 app.get("/info", (request, response) => {
@@ -61,16 +74,12 @@ app.get("/info", (request, response) => {
     const time = new Date() 
     response.send(`<p>${msg}</p><p>${time}</p>`)
 } )
-// fetch a person
+// fetch a person from MongoDB
 app.get("/api/persons/:id", (request, response) => {
-    const req_id = Number(request.params.id)
-    const req_person = phonebook.find(x => x.id === req_id)
-    if (req_person){
-        response.json(req_person)
-    }
-    else{
-        response.status(404).end()
-    }
+    const req_id = request.params.id
+    Person.findById(req_id).then(person => {
+        response.json(person)
+    })
 })
 // Delete a person
 app.delete("/api/persons/:id", (request, response) => {
@@ -102,7 +111,15 @@ app.post("/api/persons", (request, response) => {
     }
 })
 
-const PORT = process.env.PORT || 8080
+// Our middleware to handle unknown endpoint
+// Need to put this after all routes
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({error: "unknown endpoint"})
+}
+
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

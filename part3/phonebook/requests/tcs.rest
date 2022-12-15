@@ -1,20 +1,20 @@
 ### Get the whole phonebook
-GET http://localhost:3001/api/persons
+GET http://localhost:8080/api/persons
 
 ### Get the summary
-GET http://localhost:3001/info
+GET http://localhost:8080/info
 
 ### Get a person
-GET http://localhost:3001/api/persons/1
+GET http://localhost:8080/api/persons/639b4109ab33aa6c65a5a9bd
 
 ### Get a ghost
-GET http://localhost:3001/api/persons/1011
+GET http://localhost:8080/api/persons/1011
 
 ### Delete a person
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:8080/api/persons/1
 
 ### Add a person
-POST http://localhost:3001/api/persons
+POST http://localhost:8080/api/persons
 content-type: application/json
 
 {
@@ -24,10 +24,13 @@ content-type: application/json
 }
 
 ### Add a person without sufficient content
-POST http://localhost:3001/api/persons
+POST http://localhost:8080/api/persons
 content-type: application/json
 
 {
     "name":"Woopsy",
     "animal": "cat"
 }
+
+### Unknown endpoint
+post http://localhost:8080/api/unknown/pewpew
