@@ -43,11 +43,15 @@ app.get("/api/persons", (request, response) => {
         response.json(phonebook)
     })
 } )
-// get metadata
-app.get("/info", (request, response) => {
-    const msg = `Phonebook has info for ${phonebook.length} people.`
-    const time = new Date() 
-    response.send(`<p>${msg}</p><p>${time}</p>`)
+// get metadata by fetching phonebook from MongoDB
+app.get("/info", (request, response, next) => {
+    Person.find({})
+          .then(phonebook => {
+            const msg = `Phonebook has info for ${phonebook.length} people.`
+            const time = new Date() 
+            response.send(`<p>${msg}</p><p>${time}</p>`)
+          })
+          .catch(error => next(error))
 } )
 // fetch a person from MongoDB
 app.get("/api/persons/:id", (request, response, next) => {
