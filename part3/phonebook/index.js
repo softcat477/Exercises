@@ -84,6 +84,20 @@ app.post("/api/persons", (request, response) => {
         })
     }
 })
+// Update a person in MongoDB
+app.put("/api/persons/:id", (request, response, next) => {
+    const body = request.body
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, {new:true})
+                .then(updatedPerson => {
+                    response.json(updatedPerson)
+                })
+                .catch(error => next(error))
+})
 
 // Middleware to handle unknown endpoint
 // Need to put this after all routes

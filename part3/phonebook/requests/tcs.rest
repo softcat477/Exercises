@@ -34,3 +34,12 @@ content-type: application/json
 
 ### Unknown endpoint
 post http://localhost:8080/api/unknown/pewpew
+
+### Update a person
+PUT http://localhost:8080/api/persons/639b98843f9d94bde1dc512a
+content-type: application/json
+
+{
+    "name": "Amlie Grisly",
+    "number": "246-9908"
+}
