@@ -88,7 +88,7 @@ app.delete("/api/persons/:id", (request, response) => {
 
     response.status(204).end()
 })
-// Add a person
+// Add a person to MongoDB
 app.post("/api/persons", (request, response) => {
     const body = request.body
 
@@ -97,17 +97,13 @@ app.post("/api/persons", (request, response) => {
             error: 'Content missing.'})
     }
     else{
-        if(phonebook.find(x => x.name === body.name)){
-            return response.status(400).json({
-                error: 'Name must be unique.'})
-        }
-        const new_person = {
+        const new_person = new Person({
             name: body.name,
             number: body.number,
-            id:Math.floor(Math.random()*1e5)
-        }
-        phonebook = phonebook.concat(new_person)
-        response.json(new_person)
+        })
+        new_person.save().then(saved_person => {
+            response.json(saved_person)
+        })
     }
 })
 
