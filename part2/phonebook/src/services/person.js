@@ -4,11 +4,7 @@ const baseUrl = '/api/persons'
 // Get: Get all person
 const getAll = () => {
     const request = axios.get(baseUrl)
-    return request.then((response) => response.data.concat({
-        "name": "ghost",
-        "number": "wo-woo-woooo",
-        "id": 1921
-      }))
+    return request.then((response) => response.data)
 }
 
 // Post: Create a new person

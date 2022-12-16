@@ -18,8 +18,8 @@ POST http://localhost:8080/api/persons
 content-type: application/json
 
 {
-    "name":"Sara",
-    "number": "123-456-7890",
+    "name":"Sam",
+    "number": "040-22334455",
     "animal": "cat"
 }
 
