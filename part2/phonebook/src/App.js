@@ -140,6 +140,14 @@ const App = () => {
                       setNewNumber("")
                       setNewName("")
                     })
+                    .catch(error => {
+                      console.log(error.response.data.error)
+                      // Display the error messahe
+                      setMessage(`Error: ${error.response.data.error}`)
+                      setTimeout(() => {
+                        setMessage(null)
+                      }, 5000)
+                    })
     }
   }
   // Delete a person

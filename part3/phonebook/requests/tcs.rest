@@ -28,7 +28,7 @@ POST http://localhost:8080/api/persons
 content-type: application/json
 
 {
-    "name":"Woopsy",
+    "name":"Wu",
     "animal": "cat"
 }
 
