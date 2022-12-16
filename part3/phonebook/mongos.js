@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 if (process.argv.length < 3) {
-    console.log('Please provide the password as an argument: node mongo.js <password>')
+    console.log("Please provide the password as an argument: node mongo.js <password>")
     process.exit(1)
 }
 
@@ -30,14 +30,14 @@ if (typeof name === "undefined" || typeof number === "undefined"){
 else{
     // Add a person to phonebook
     mongoose.connect(url)
-            .then((result) => {
-                console.log("connect")
-                const person = new Person({name:name, number:number})
+        .then((result) => {
+            console.log("connect")
+            const person = new Person( { name:name, number:number } )
 
-                return person.save()
-            })
-            .then(() => {
-                console.log("person saved!")
-                return mongoose.connection.close()
-            })
+            return person.save()
+        })
+        .then(() => {
+            console.log("person saved!")
+            return mongoose.connection.close()
+        })
 }

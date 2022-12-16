@@ -4,12 +4,12 @@ const url = process.env.MONGODB_URL
 
 console.log("Connecting to  ", url)
 mongoose.connect(url)
-        .then(result => {
-            console.log("Connected!")
-        })
-        .catch((error) => {
-            console.log("error connecting to MongoDB: ", error.message)
-        })
+    .then(result => {
+        console.log("Connected!")
+    })
+    .catch((error) => {
+        console.log("error connecting to MongoDB: ", error.message)
+    })
 
 const personSchema = new mongoose.Schema({
     name: {
