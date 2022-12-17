@@ -79,3 +79,57 @@ describe ("Search the favorite blog", () => {
         expect(result).toEqual(list_blog.slice(-2,-1)[0])
     })
 })
+
+describe("Search for the most productive (?) author", () => {
+    const blog_list = [
+        {
+            _id: '12345',
+            title: 'Blog A',
+            author: 'Author A',
+            url: "",
+            likes: 5,
+            __v: 0
+        },
+        {
+            _id: '23451',
+            title: 'Blog B',
+            author: 'Author B',
+            url: "",
+            likes: 3,
+            __v: 0
+        },
+        {
+            _id: '34512',
+            title: 'Blog C',
+            author: 'Author C',
+            url: "",
+            likes: 10,
+            __v: 0
+        },
+        {
+            _id: '34512',
+            title: 'Blog C',
+            author: 'Author C',
+            url: "",
+            likes: 10,
+            __v: 0
+        },
+        {
+            _id: '34512',
+            title: 'Blog C',
+            author: 'Author C',
+            url: "",
+            likes: 10,
+            __v: 0
+        },
+    ]
+    test("search a list with 2+ authors", () => {
+        const result = listHelper.mostBlogs(blog_list)
+        expect(result).toEqual({author:"Author C", blogs:3})
+    })
+
+    test("search a list with 1 author", () => {
+        const result = listHelper.mostBlogs(blog_list.slice(0, 1))
+        expect(result).toEqual({author:"Author A", blogs:1})
+    })
+})
