@@ -32,3 +32,50 @@ describe ("Total likes", () => {
         expect(result).toBe(10)
     })
 })
+
+describe ("Search the favorite blog", () => {
+    const list_blog = [
+        {
+            _id: '12345',
+            title: 'Blog A',
+            author: 'Author A',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 5,
+            __v: 0
+        },
+        {
+            _id: '23451',
+            title: 'Blog B',
+            author: 'Author B',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 3,
+            __v: 0
+        },
+        {
+            _id: '34512',
+            title: 'Blog C',
+            author: 'Author C',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 10,
+            __v: 0
+        },
+        {
+            _id: '34512',
+            title: 'Blog C',
+            author: 'Author C',
+            url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+            likes: 10,
+            __v: 0
+        },
+    ]
+
+    test("when list has only one blog, it should be the favorite one", () => {
+        const result = listHelper.favoriteBlog(list_blog.slice(0, 1))
+        expect(result).toEqual(list_blog.slice(0, 1)[0])
+    })
+
+    test("of a list with multiple blogs", () => {
+        const result = listHelper.favoriteBlog(list_blog)
+        expect(result).toEqual(list_blog.slice(-2,-1)[0])
+    })
+})
