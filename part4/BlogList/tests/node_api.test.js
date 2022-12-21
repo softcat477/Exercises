@@ -44,6 +44,41 @@ test ("Varify the id property", async () => {
     })
 })
 
+/*
+4.10
+Write a test that verifies that making an HTTP POST request to 
+the /api/blogs url successfully creates a new blog post. At the 
+very least, verify that the total number of blogs in the system i
+s increased by one. You can also verify that the content of the 
+blog post is saved correctly to the database.
+
+Once the test is finished, refactor the operation to use async/await 
+instead of promises.
+*/
+test("Varify HTTP POST to /api/blogs", async () => {
+    const new_blog ={
+        title: "Blog C",
+        author: "Author C",
+        url: "URL C",
+        likes: 666
+    }
+
+    const response = await api.post("/api/blogs")
+        .send(new_blog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/)
+
+    const new_blogs = await helper.blogsInDb()
+  
+    expect(new_blogs).toHaveLength(helper.initialBlogs.length + 1)
+    const content = new_blogs.map(x => {
+        return JSON.stringify({"title": x.title, "author": x.author, "url": x.url, "likes":x.likes})
+    })
+    expect(content).toContain(
+        JSON.stringify(new_blog)
+    )
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
