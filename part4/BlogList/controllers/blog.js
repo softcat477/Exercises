@@ -18,4 +18,25 @@ router.delete('/:id', async (request, response, next) => {
   response.status(204).end()
 })
 
+router.put('/:id', async (request, response, next) => {
+  const id = request.params.id
+  const body = request.body
+
+  const updated_blog = await Blog.findByIdAndUpdate(id, body, { new: true, runValidators: true, contect: "query" })
+  response.status(201).json(updated_blog)
+
+  //const body = request.body
+  //const note = {
+  //    content:body.content,
+  //    important: body.important
+  //}
+
+  //Note.findByIdAndUpdate(request.params.id, note, { new: true, runValidators: true, contect: "query" } )
+  //    .then(updatedNote => {
+  //        response.json(updatedNote)
+  //    })
+  //    .catch(error => next(error))
+
+})
+
 module.exports = router

@@ -161,6 +161,35 @@ test("Varify DELETE a post", async () => {
     expect(blogs_after_delete_content).not.toContain(JSON.stringify(blog_to_delete))
 })
 
+/*
+4.14
+Blog list expansions, step2
+
+Implement functionality for updating the information of an 
+individual blog post. Use async/await.
+
+The application mostly needs to update the amount of likes for a blog post. You can implement this functionality the same way that we implemented updating notes in part 3.
+*/
+test("Varify updating the information of a blog", async () => {
+    const original_blogs = await helper.blogsInDb()
+    const blog_to_modify = original_blogs[0]
+    let new_blog = {...blog_to_modify, 
+        title: "new title",
+        author: "new author",
+        url: "new url",
+        likes: -1
+    }
+
+    const result = await api.put(`/api/blogs/${blog_to_modify.id}`) 
+        .send(new_blog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/)
+
+    const answer = await helper.blogsInDb()
+    new_blog.id = blog_to_modify.id
+    expect(JSON.stringify(answer[0])).toBe(JSON.stringify(new_blog))
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
