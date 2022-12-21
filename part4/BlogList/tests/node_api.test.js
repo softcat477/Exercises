@@ -137,6 +137,30 @@ test("Varify if likes is title or url are missing, we get status 400", async () 
         .expect(400)
 })
 
+/*
+4.13
+Blog list expansions, step1
+Implement functionality for deleting a single blog post resource.
+Use the async/await syntax. Follow RESTful conventions when defining 
+the HTTP API.
+Implement tests for the functionality.
+*/
+test("Varify DELETE a post", async () => {
+    const blogs_before_delete = await helper.blogsInDb()
+    const blog_to_delete = blogs_before_delete[0]
+
+    // Delete the blog, should get status 204
+    const result = await api.delete(`/api/blogs/${blog_to_delete.id}`)
+        .expect(204)
+
+    const blogs_after_delete = await helper.blogsInDb()
+    // Then, the length should be the length of the original database - 1
+    expect(blogs_after_delete).toHaveLength(blogs_before_delete.length - 1)
+    const blogs_after_delete_content = blogs_after_delete.map(x => JSON.stringify(x))
+    // and the deleted blog should not be in the DB anymore
+    expect(blogs_after_delete_content).not.toContain(JSON.stringify(blog_to_delete))
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

@@ -8,8 +8,14 @@ router.get('/', async (request, response) => {
 
 router.post('/', async (request, response, next) => {
   const blog = new Blog(request.body)
-  result =  await blog.save()
+  const result =  await blog.save()
   response.status(201).json(result)
+})
+
+router.delete('/:id', async (request, response, next) => {
+  const id = request.params.id
+  const blog = await Blog.findByIdAndRemove(id)
+  response.status(204).end()
 })
 
 module.exports = router
