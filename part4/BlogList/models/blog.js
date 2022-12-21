@@ -12,8 +12,6 @@ const blogSchema = new mongoose.Schema({
   likes: Number
 })
 
-const Blog = mongoose.model('Blog', blogSchema)
-
 mongoose.connect(MONGODB_URL)
     .then(() => {
         logger.info("Connect to mongus")
@@ -21,5 +19,15 @@ mongoose.connect(MONGODB_URL)
     .catch(error => {
         logger.error("Failed to connect to: ", MONGODB_URL)
     })
+
+blogSchema.set("toJSON", {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
+const Blog = mongoose.model('Blog', blogSchema)
 
 module.exports = Blog
