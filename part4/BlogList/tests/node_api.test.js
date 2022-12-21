@@ -105,6 +105,38 @@ test("Varify if likes is missing, the default value is 0", async () => {
     expect(new_blogs[helper.initialBlogs.length + 1 - 1].likes).toBe(0)
 })
 
+/*
+4.12
+Write a test related to creating new blogs via the /api/blogs endpoint, 
+that verifies that if the title or url properties are missing from the 
+request data, the backend responds to the request with the status code 400 
+Bad Request.
+
+Make the required changes to the code so that it passes the test.
+*/
+test("Varify if likes is title or url are missing, we get status 400", async () => {
+    // Do something
+    const missing_url ={
+        title: "Empty",
+        author: "Author C",
+        likes: 11
+    }
+
+    const missing_title ={
+        author: "Author C",
+        url: "Empty",
+        likes: 11
+    }
+    // POST to add the new blog to the dataset
+    let response = await api.post("/api/blogs")
+        .send(missing_url)
+        .expect(400)
+
+    response = await api.post("/api/blogs")
+        .send(missing_title)
+        .expect(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
