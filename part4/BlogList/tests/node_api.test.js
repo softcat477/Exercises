@@ -79,6 +79,32 @@ test("Varify HTTP POST to /api/blogs", async () => {
     )
 })
 
+/*
+4.11
+Write a test that verifies that if the likes property is missing from 
+the request, it will default to the value 0. Do not test the other 
+properties of the created blogs yet.
+
+Make the required changes to the code so that it passes the test.
+*/
+test("Varify if likes is missing, the default value is 0", async () => {
+    // Do something
+    const new_blog ={
+        title: "Blog C",
+        author: "Author C",
+        url: "URL C"
+    }
+    // POST to add the new blog to the dataset
+    const response = await api.post("/api/blogs")
+        .send(new_blog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/)
+
+    const new_blogs = await helper.blogsInDb()
+    expect(new_blogs).toHaveLength(helper.initialBlogs.length + 1)
+    expect(new_blogs[helper.initialBlogs.length + 1 - 1].likes).toBe(0)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
