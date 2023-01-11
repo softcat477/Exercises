@@ -1,17 +1,29 @@
 const mongoose = require("mongoose")
 const Blog = require("../models/blog")
+const User = require("../models/User")
 const supertest = require("supertest")
 const app = require("../app")
 const helper = require("./test_helper")
+const bcrypt = require("bcrypt")
 
 const api = supertest(app)
 
 beforeEach(async () => {
+    // Delete all users
+    await User.deleteMany({})
+
+    // Create and save root
+    const pwd_hash = await bcrypt.hash("sillyPwd", 10)
+    const user = new User({username: "root", pwd_hash: pwd_hash, name:"R1 R2"})
+    await user.save()
+
+    const uid = (await helper.usersInDb())[0].id // UnsupportedMediaTypeError
+
     // Clear db
     await Blog.deleteMany({})
 
     // and create blogs
-    const blogObjList = helper.initialBlogs.map(b => new Blog(b))
+    const blogObjList = helper.initialBlogs.map(b => new Blog({...b, user:uid}))
     const promiseList = blogObjList.map(b => b.save())
     await Promise.all(promiseList)
 })
@@ -56,11 +68,14 @@ Once the test is finished, refactor the operation to use async/await
 instead of promises.
 */
 test("Varify HTTP POST to /api/blogs", async () => {
+    const uid = (await helper.usersInDb())[0].id
+
     const new_blog ={
         title: "Blog C",
         author: "Author C",
         url: "URL C",
-        likes: 666
+        likes: 666,
+        user: uid
     }
 
     const response = await api.post("/api/blogs")
@@ -72,11 +87,18 @@ test("Varify HTTP POST to /api/blogs", async () => {
   
     expect(new_blogs).toHaveLength(helper.initialBlogs.length + 1)
     const content = new_blogs.map(x => {
-        return JSON.stringify({"title": x.title, "author": x.author, "url": x.url, "likes":x.likes})
+        return JSON.stringify({"title": x.title, "author": x.author, "url": x.url, "likes":x.likes, "user":x.user})
     })
+
+    // The new blog should contain uid
     expect(content).toContain(
         JSON.stringify(new_blog)
     )
+
+    // and the blog id is added to user's blogs list
+    const users = (await helper.usersInDb())
+    const blog_id = users[0].blogs[0].toString()
+    expect(blog_id).toBe(new_blogs[2].id)
 })
 
 /*
@@ -88,11 +110,14 @@ properties of the created blogs yet.
 Make the required changes to the code so that it passes the test.
 */
 test("Varify if likes is missing, the default value is 0", async () => {
+    const uid = (await helper.usersInDb())[0].id
+
     // Do something
     const new_blog ={
         title: "Blog C",
         author: "Author C",
-        url: "URL C"
+        url: "URL C",
+        user: uid
     }
     // POST to add the new blog to the dataset
     const response = await api.post("/api/blogs")
@@ -114,18 +139,22 @@ Bad Request.
 
 Make the required changes to the code so that it passes the test.
 */
-test("Varify if likes is title or url are missing, we get status 400", async () => {
+test("Varify if title or url are missing, we get status 400", async () => {
+    const uid = (await helper.usersInDb())[0].id
+
     // Do something
     const missing_url ={
         title: "Empty",
         author: "Author C",
-        likes: 11
+        likes: 11,
+        user: uid
     }
 
     const missing_title ={
         author: "Author C",
         url: "Empty",
-        likes: 11
+        likes: 11,
+        user: uid
     }
     // POST to add the new blog to the dataset
     let response = await api.post("/api/blogs")
