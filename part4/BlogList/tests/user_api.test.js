@@ -99,8 +99,8 @@ describe("When there's only one user in the test db", () => {
         const usernames = users_at_end.map(u => u.username)
         expect(usernames).not.toContain(new_user.username)
     })
-})
 
-afterAll(() => {
-    mongoose.connection.close()
+    afterAll(() => {
+        mongoose.connection.close()
+    })
 })
