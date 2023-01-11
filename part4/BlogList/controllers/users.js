@@ -7,6 +7,13 @@ const bcrypt = require("bcrypt")
 userRouter.post("/", async(request, response) => {
     const {username, name, pwd} = request.body
 
+    // username and pwd should be at leat 3 characters long
+    if (username.length < 3 || pwd.length < 3){
+        return response.status(400).json({
+            error: "username and pwd must be at least 3 characters long"
+        })
+    }
+
     // Do not create users with the same username
     const existing_user = await User.findOne({username})
     if (existing_user) {
