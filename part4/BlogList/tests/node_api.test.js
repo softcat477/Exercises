@@ -68,6 +68,22 @@ Once the test is finished, refactor the operation to use async/await
 instead of promises.
 */
 test("Varify HTTP POST to /api/blogs", async () => {
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+
+    const token = response_login.body.token
+
     const uid = (await helper.usersInDb())[0].id
 
     const new_blog ={
@@ -79,6 +95,7 @@ test("Varify HTTP POST to /api/blogs", async () => {
     }
 
     const response = await api.post("/api/blogs")
+        .set("Authorization", "Bearer " + token)
         .send(new_blog)
         .expect(201)
         .expect("Content-Type", /application\/json/)
@@ -110,6 +127,22 @@ properties of the created blogs yet.
 Make the required changes to the code so that it passes the test.
 */
 test("Varify if likes is missing, the default value is 0", async () => {
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+
+    const token = response_login.body.token
+
     const uid = (await helper.usersInDb())[0].id
 
     // Do something
@@ -121,6 +154,7 @@ test("Varify if likes is missing, the default value is 0", async () => {
     }
     // POST to add the new blog to the dataset
     const response = await api.post("/api/blogs")
+        .set("Authorization", "Bearer " + token)
         .send(new_blog)
         .expect(201)
         .expect("Content-Type", /application\/json/)
@@ -140,6 +174,22 @@ Bad Request.
 Make the required changes to the code so that it passes the test.
 */
 test("Varify if title or url are missing, we get status 400", async () => {
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+
+    const token = response_login.body.token
+
     const uid = (await helper.usersInDb())[0].id
 
     // Do something
@@ -158,10 +208,12 @@ test("Varify if title or url are missing, we get status 400", async () => {
     }
     // POST to add the new blog to the dataset
     let response = await api.post("/api/blogs")
+        .set("Authorization", "Bearer " + token)
         .send(missing_url)
         .expect(400)
 
     response = await api.post("/api/blogs")
+        .set("Authorization", "Bearer " + token)
         .send(missing_title)
         .expect(400)
 })
@@ -217,6 +269,47 @@ test("Varify updating the information of a blog", async () => {
     const answer = await helper.blogsInDb()
     new_blog.id = blog_to_modify.id
     expect(JSON.stringify(answer[0])).toBe(JSON.stringify(new_blog))
+})
+
+test("POST with an invalid token should get 401", async () => {
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+
+    // Invalid token
+    const token = response_login.body.token.toUpperCase()
+
+    const uid = (await helper.usersInDb())[0].id
+
+    // This blog should not be added to DB
+    const new_blog ={
+        title: "Blog C",
+        author: "Author C",
+        url: "URL C",
+        user: uid
+    }
+
+    const blogsAtFirst = await helper.blogsInDb()
+
+    // POST to add the new blog to the dataset with an invalid token
+    const response = await api.post("/api/blogs")
+        .set("Authorization", "Bearer " + token)
+        .send(new_blog)
+        .expect(401)
+        .expect("Content-Type", /application\/json/)
+
+    // Since we're using an invalid token, the blog should not be added to DB
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtFirst.length)
 })
 
 afterAll(() => {

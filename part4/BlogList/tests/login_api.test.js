@@ -37,6 +37,24 @@ test("login with correct username and pwd and get the token", async() => {
     expect(response.body.username).toBe("root")
 })
 
+test("login to get the correct token and post a blog with this token", async() => {
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response.body).toHaveProperty('token')
+    expect(response.body.username).toBe("root")
+
+    const token = response.body.token
+})
+
 test("login with the incorrect pwd should get 401", async() => {
     const login_user = {
         username: "root",
