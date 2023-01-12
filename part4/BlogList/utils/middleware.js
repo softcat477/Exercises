@@ -16,6 +16,25 @@ const errorHandler = (error, request, response, next) => {
     next (error)
 }
 
+// Extract authentication
+// Return token from header, must use bearer for the authorization method
+const getToken = (request, response, next) => {
+    const authorization = request.get("authorization")
+    if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+      request.token =  authorization.substring(7)
+    }
+    else {
+        request.token = ""
+    }
+
+    next()
+}
+
+// Unknown endpoint
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({error: "unknown endpoint"})
+}
+
 module.exports = {
-    errorHandler
+    errorHandler, getToken, unknownEndpoint,
 }

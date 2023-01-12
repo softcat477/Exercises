@@ -10,21 +10,12 @@ router.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-// Return token from header, must use bearer for the authorization method
-const getToken = request => {
-  const authorization = request.get("authorization")
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    return authorization.substring(7)
-  }
-  return null
-}
-
 // Add a new blog
 router.post('/', async (request, response, next) => {
   const body = request.body
 
-  // Get token and verify (decode) it
-  const token = getToken(request)
+  // Token is decoded by middleware
+  const token = request.token
   const decodedToken = jwt.verify(token, config.SECRET)
   if (!decodedToken.id) {
     // This is not a healthy token, reject it
