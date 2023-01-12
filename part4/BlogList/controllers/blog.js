@@ -14,16 +14,8 @@ router.get('/', async (request, response) => {
 router.post('/', async (request, response, next) => {
   const body = request.body
 
-  // Token is decoded by middleware
-  const token = request.token
-  const decodedToken = jwt.verify(token, config.SECRET)
-  if (!decodedToken.id) {
-    // This is not a healthy token, reject it
-    return response.status(401).json({error: "token missing or invalid"})
-  }
-
   // Find the user
-  const user = await User.findById(decodedToken.id)
+  const user = await User.findById(request.userId)
 
   // Create a new blog and link to the userId
   const blog = new Blog({
@@ -45,14 +37,6 @@ router.post('/', async (request, response, next) => {
 })
 
 router.delete('/:id', async (request, response, next) => {
-  // Decode the token and verify it.
-  const token = request.token
-  const decodedToken = jwt.verify(token, config.SECRET)
-  if (!decodedToken.id) {
-    // This is not a healthy token, reject it
-    return response.status(401).json({error: "token missing or invalid"})
-  }
-
   const id = request.params.id
   const blog = await Blog.findById(id)
 
@@ -60,10 +44,11 @@ router.delete('/:id', async (request, response, next) => {
     return response.status(404).json({error: "id not found"})
   }
 
-  if (blog.user.toString() !== decodedToken.id) {
-    // This is not a healthy token, reject it
+  // This is not a healthy token, reject it
+  if (blog.user.toString() !== request.userId) {
     return response.status(401).json({error: "token missing or invalid"})
   }
+
   await Blog.findByIdAndRemove(id)
   response.status(204).end()
 })
