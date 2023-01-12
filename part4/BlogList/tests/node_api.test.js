@@ -226,12 +226,29 @@ Use the async/await syntax. Follow RESTful conventions when defining
 the HTTP API.
 Implement tests for the functionality.
 */
-test("Varify DELETE a post", async () => {
+test("Varify DELETE a post with valid TOKEN", async () => {
+    // Get token
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+    const token = response_login.body.token
+
     const blogs_before_delete = await helper.blogsInDb()
     const blog_to_delete = blogs_before_delete[0]
 
     // Delete the blog, should get status 204
     const result = await api.delete(`/api/blogs/${blog_to_delete.id}`)
+        .set("Authorization", "Bearer " + token)
         .expect(204)
 
     const blogs_after_delete = await helper.blogsInDb()
@@ -240,6 +257,88 @@ test("Varify DELETE a post", async () => {
     const blogs_after_delete_content = blogs_after_delete.map(x => JSON.stringify(x))
     // and the deleted blog should not be in the DB anymore
     expect(blogs_after_delete_content).not.toContain(JSON.stringify(blog_to_delete))
+})
+
+test("DELETE a post with invalid TOEKN should not work", async () => {
+    // Get token
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+    const token = response_login.body.token.toUpperCase() // toUpperCase() to make this token invalid
+
+    const blogs_before_delete = await helper.blogsInDb()
+    const blog_to_delete = blogs_before_delete[0]
+
+    // Delete the blog with invalid token, should get status 401
+    const result = await api.delete(`/api/blogs/${blog_to_delete.id}`)
+        .set("Authorization", "Bearer " + token)
+        .expect(401)
+
+    const blogs_after_delete = await helper.blogsInDb()
+    // Then, the length should be the length of the original database
+    expect(blogs_after_delete).toHaveLength(blogs_before_delete.length)
+    const blogs_after_delete_content = blogs_after_delete.map(x => JSON.stringify(x))
+    // and the deleted blog should be IN the DB
+    expect(blogs_after_delete_content).toContain(JSON.stringify(blog_to_delete))
+})
+
+test("DELETE other people's post is not accepted", async () => {
+    // First we make another user
+    const pwd_hash = await bcrypt.hash("123456", 10)
+    const user = new User({username: "tammy", pwd_hash: pwd_hash, name:"Tammy theCat"})
+    await user.save()
+
+    // Find the new user abd get its ID
+    const users = await helper.usersInDb()
+    const uid = users.filter(u => u.username === "tammy")[0].id
+
+    // and create blogs for Tammy
+    await Blog.deleteMany({})
+    const blogObjList = helper.initialBlogs.map(b => new Blog({...b, user:uid}))
+    const promiseList = blogObjList.map(b => b.save())
+    await Promise.all(promiseList)
+
+    // and get a blog ID
+    const blogs_before_delete = await helper.blogsInDb()
+    const blog_to_delete = blogs_before_delete[0]
+
+    // Then we login as root to get the token
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+    const root_token = response_login.body.token
+
+    // Delete tammy's blog with root's token, should get status 401
+    const result = await api.delete(`/api/blogs/${blog_to_delete.id}`)
+        .set("Authorization", "Bearer " + root_token)
+        .expect(401)
+
+    const blogs_after_delete = await helper.blogsInDb()
+    // Then, the length should be the length of the original database
+    expect(blogs_after_delete).toHaveLength(blogs_before_delete.length)
+    const blogs_after_delete_content = blogs_after_delete.map(x => JSON.stringify(x))
+    // and the deleted blog should be IN the DB 
+    expect(blogs_after_delete_content).toContain(JSON.stringify(blog_to_delete))
 })
 
 /*

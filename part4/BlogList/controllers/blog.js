@@ -45,8 +45,26 @@ router.post('/', async (request, response, next) => {
 })
 
 router.delete('/:id', async (request, response, next) => {
+  // Decode the token and verify it.
+  const token = request.token
+  const decodedToken = jwt.verify(token, config.SECRET)
+  if (!decodedToken.id) {
+    // This is not a healthy token, reject it
+    return response.status(401).json({error: "token missing or invalid"})
+  }
+
   const id = request.params.id
-  const blog = await Blog.findByIdAndRemove(id)
+  const blog = await Blog.findById(id)
+
+  if (blog === null){
+    return response.status(404).json({error: "id not found"})
+  }
+
+  if (blog.user.toString() !== decodedToken.id) {
+    // This is not a healthy token, reject it
+    return response.status(401).json({error: "token missing or invalid"})
+  }
+  await Blog.findByIdAndRemove(id)
   response.status(204).end()
 })
 

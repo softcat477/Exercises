@@ -11,8 +11,6 @@ const config = require("../utils/config")
 // 4. Generate a token and return to user
 loginRouter.post("/", async (request, response) => {
     const {username, pwd} = request.body
-    console.log("Find ", username)
-    console.log("pwd: ", pwd)
     
     // Get user from db
     const user = await User.findOne({username})
