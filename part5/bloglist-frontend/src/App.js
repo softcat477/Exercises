@@ -29,7 +29,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log("Login with ", username, password)
     
     try {
       // login and get the token
@@ -51,6 +50,12 @@ const App = () => {
       console.error("Wrong Credentials")
     }
   }
+
+  const handleLogout = () => {
+    window.localStorage.clear()
+    setUser(null)
+  }
+
   return (
     <>
 
@@ -63,7 +68,7 @@ const App = () => {
     { user !== null && 
       <div>
         <p>
-          {user.name} logged in
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
         </p>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
