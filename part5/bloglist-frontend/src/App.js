@@ -5,17 +5,29 @@ import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import loginService from "./services/login"
 
+import CreateBlog from "./components/CreateBlog"
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
+    // https://devtrium.com/posts/async-functions-useeffect
+    const fetchBlogs = async () => {
+      if (user !== null) {
+        const blogs = await blogService.getAll(user)
+        setBlogs(blogs)
+      }
+    }
+
+    fetchBlogs().catch(console.error)
+  }, [user])
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem("loggedUser")
@@ -51,6 +63,21 @@ const App = () => {
     }
   }
 
+  const handleCreate = async (event) => {
+    event.preventDefault()
+
+    const returnedBlog = await blogService.createBlog({
+      title: title,
+      author: author,
+      url: url
+    })
+
+    setBlogs(blogs.concat(returnedBlog))
+    setTitle("")
+    setAuthor("")
+    setUrl("")
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -64,12 +91,19 @@ const App = () => {
     {user===null && LoginForm(handleLogin,
       username, setUsername,
       password, setPassword)}
-    
+
     { user !== null && 
       <div>
         <p>
           {user.name} logged in <button onClick={handleLogout}>logout</button>
         </p>
+
+        <h3>create new</h3>
+        {CreateBlog(handleCreate,
+          title, setTitle,
+          author, setAuthor,
+          url, setUrl)}
+
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
