@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import loginService from "./services/login"
 
 import CreateBlog from "./components/CreateBlog"
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -16,6 +17,8 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     // https://devtrium.com/posts/async-functions-useeffect
@@ -60,6 +63,10 @@ const App = () => {
     }
     catch (exception) {
       console.error("Wrong Credentials")
+      setMessage("Wrong Credential")
+      setTimeout(() => {
+        setMessage("")
+      }, 5000)
     }
   }
 
@@ -76,6 +83,11 @@ const App = () => {
     setTitle("")
     setAuthor("")
     setUrl("")
+
+    setMessage(`a new blog ${title} by ${author} is added`)
+    setTimeout(() => {
+      setMessage("")
+    }, 5000)
   }
 
   const handleLogout = () => {
@@ -87,6 +99,8 @@ const App = () => {
     <>
 
     <h2>blogs</h2>
+
+    <Notification message={message} />
 
     {user===null && LoginForm(handleLogin,
       username, setUsername,
