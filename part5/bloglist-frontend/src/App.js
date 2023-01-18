@@ -9,6 +9,8 @@ import CreateBlog from "./components/CreateBlog"
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
+import BlogDetail from './components/BlogDetail'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
@@ -105,7 +107,19 @@ const App = () => {
         </Togglable>
 
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          { 
+            return (
+              <>
+                <Blog key={blog.id} blog={blog} />
+                <Togglable buttonLabel="view">
+                  <BlogDetail title={blog.title}
+                    author={blog.author}
+                    likes={blog.likes}
+                    url={blog.url}/>
+                </Togglable>
+              </>
+            )
+          }
         )}
       </div>
     }
