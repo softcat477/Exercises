@@ -19,12 +19,18 @@ const App = () => {
 
   const [message, setMessage] = useState("")
 
+  const updateBlogs = (blogs) => {
+    let sort_blogs = [...blogs]
+    sort_blogs = sort_blogs.sort((a, b) => b.likes - a.likes) 
+    setBlogs(sort_blogs)
+  }
+
   useEffect(() => {
     // https://devtrium.com/posts/async-functions-useeffect
     const fetchBlogs = async () => {
       if (user !== null) {
         const blogs = await blogService.getAll(user)
-        setBlogs(blogs)
+        updateBlogs(blogs)
       }
     }
 
@@ -71,7 +77,7 @@ const App = () => {
 
   const createBlogOnServer = async (newBlog) => {
     const returnedBlog = await blogService.createBlog(newBlog)
-    setBlogs(blogs.concat(returnedBlog))
+    updateBlogs(blogs.concat(returnedBlog))
 
     setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} is added`)
     setTimeout(() => {
@@ -92,7 +98,7 @@ const App = () => {
     // Update likes
     let tmp = [...blogs]
     tmp.find(x=>x.id===blog.id).likes=blog.likes+1
-    setBlogs(tmp)
+    updateBlogs(tmp)
   }
 
   const handleLogout = () => {
