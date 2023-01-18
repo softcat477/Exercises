@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/blogs'
+import { useState, useEffect } from "react"
+import Blog from "./components/Blog"
+import blogService from "./services/blogs"
 
-import LoginForm from './components/LoginForm'
+import LoginForm from "./components/LoginForm"
 import loginService from "./services/login"
 
 import CreateBlog from "./components/CreateBlog"
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
+import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
 
-import BlogDetail from './components/BlogDetail'
+import BlogDetail from "./components/BlogDetail"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -21,7 +21,7 @@ const App = () => {
 
   const updateBlogs = (blogs) => {
     let sort_blogs = [...blogs]
-    sort_blogs = sort_blogs.sort((a, b) => b.likes - a.likes) 
+    sort_blogs = sort_blogs.sort((a, b) => b.likes - a.likes)
     setBlogs(sort_blogs)
   }
 
@@ -49,10 +49,10 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       // login and get the token
-      const user = await loginService.login({username: username, pwd: password})
+      const user = await loginService.login({ username: username, pwd: password })
       // Save to window.localStorage
       window.localStorage.setItem(
         "loggedUser", JSON.stringify(user)
@@ -97,7 +97,7 @@ const App = () => {
 
     // Update likes
     let tmp = [...blogs]
-    tmp.find(x=>x.id===blog.id).likes=blog.likes+1
+    tmp.find(x => x.id===blog.id).likes=blog.likes+1
     updateBlogs(tmp)
   }
 
@@ -120,46 +120,44 @@ const App = () => {
   return (
     <>
 
-    <h2>blogs</h2>
+      <h2>blogs</h2>
 
-    <Notification key="notification" message={message} />
+      <Notification key="notification" message={message} />
 
-    {user===null && LoginForm(handleLogin,
-      username, setUsername,
-      password, setPassword)}
+      {user===null && LoginForm(handleLogin,
+        username, setUsername,
+        password, setPassword)}
 
-    { user !== null && 
-      <div>
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
+      { user !== null &&
+          <div>
+            <p>
+              {user.name} logged in <button onClick={handleLogout}>logout</button>
+            </p>
 
-        <h3>create new</h3>
-        <Togglable key="tg-createBlog" buttonLabel="new note">
-          <CreateBlog key="createBlog" createBlogOnServer={createBlogOnServer} />
-        </Togglable>
+            <h3>create new</h3>
+            <Togglable key="tg-createBlog" buttonLabel="new note">
+              <CreateBlog key="createBlog" createBlogOnServer={createBlogOnServer} />
+            </Togglable>
 
-        {blogs.map(blog =>
-          { 
-            return (
-              <div key={`div-${blog.id}`}>
-                <Blog key={blog.id} blog={blog} />
-                <Togglable key={`tg-${blog.id}`} buttonLabel="view">
-                  <BlogDetail key={`bd-${blog.id}`} title={blog.title}
-                    author={blog.author}
-                    likes={blog.likes}
-                    url={blog.url}
-                    blog={blog}
-                    likeBlog={likeBlog}
-                    deleteBlog={deleteBlog}/>
-                </Togglable>
-              </div>
-            )
-          }
-        )}
-      </div>
-    }
-    
+            {blogs.map(blog => {
+              return (
+                <div key={`div-${blog.id}`}>
+                  <Blog key={blog.id} blog={blog} />
+                  <Togglable key={`tg-${blog.id}`} buttonLabel="view">
+                    <BlogDetail key={`bd-${blog.id}`} title={blog.title}
+                      author={blog.author}
+                      likes={blog.likes}
+                      url={blog.url}
+                      blog={blog}
+                      likeBlog={likeBlog}
+                      deleteBlog={deleteBlog}/>
+                  </Togglable>
+                </div>
+              )}
+            )}
+          </div>
+      }
+
     </>
   )
 }
