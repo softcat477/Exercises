@@ -1,6 +1,10 @@
-const BlogDetail = ({title, author, url, likes, blog, likeBlog}) => {
+const BlogDetail = ({title, author, url, likes, blog, likeBlog, deleteBlog}) => {
     const click = async () => {
         await likeBlog(blog)
+    }
+
+    const onDelete = async () => {
+        deleteBlog(blog)
     }
 
     const blogStyle = {
@@ -19,6 +23,7 @@ const BlogDetail = ({title, author, url, likes, blog, likeBlog}) => {
             <li key="url">Url   : {url}</li>
             <li key="likes">likes : {likes} <button onClick={click}>like</button></li>
         </ul>
+        <button onClick={onDelete}>delete</button>
         </div>
     )
 }

@@ -101,6 +101,17 @@ const App = () => {
     updateBlogs(tmp)
   }
 
+  const deleteBlog = async (blog) => {
+    if (window.confirm (`Remove blog ${blog.title} by ${blog.author}`)) {
+      // send DELETE to server
+      await blogService.deleteBlog(blog.id)
+
+      // Update blogs
+      let tmp = blogs.filter(x => x.id !== blog.id)
+      updateBlogs(tmp)
+    }
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -111,7 +122,7 @@ const App = () => {
 
     <h2>blogs</h2>
 
-    <Notification message={message} />
+    <Notification key="notification" message={message} />
 
     {user===null && LoginForm(handleLogin,
       username, setUsername,
@@ -124,8 +135,8 @@ const App = () => {
         </p>
 
         <h3>create new</h3>
-        <Togglable buttonLabel="new note">
-          <CreateBlog createBlogOnServer={createBlogOnServer} />
+        <Togglable key="tg-createBlog" buttonLabel="new note">
+          <CreateBlog key="createBlog" createBlogOnServer={createBlogOnServer} />
         </Togglable>
 
         {blogs.map(blog =>
@@ -133,13 +144,14 @@ const App = () => {
             return (
               <>
                 <Blog key={blog.id} blog={blog} />
-                <Togglable buttonLabel="view">
-                  <BlogDetail title={blog.title}
+                <Togglable key={`tg-${blog.id}`} buttonLabel="view">
+                  <BlogDetail key={`bd-${blog.id}`} title={blog.title}
                     author={blog.author}
                     likes={blog.likes}
                     url={blog.url}
                     blog={blog}
-                    likeBlog={likeBlog}/>
+                    likeBlog={likeBlog}
+                    deleteBlog={deleteBlog}/>
                 </Togglable>
               </>
             )
