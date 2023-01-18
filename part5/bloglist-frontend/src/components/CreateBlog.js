@@ -1,7 +1,24 @@
-const CreateBlog = (handleCreate, 
-    title, setTitle,
-    author, setAuthor,
-    url, setUrl) => {
+import {useState} from "react"
+const CreateBlog = ({createBlogOnServer}) => {
+
+    const [title, setTitle] = useState("")
+    const [author, setAuthor] = useState("")
+    const [url, setUrl] = useState("")
+
+    const handleCreate = async (event) => {
+        event.preventDefault()
+    
+        await createBlogOnServer({
+            title: title,
+            author: author,
+            url: url
+        })
+    
+        setTitle("")
+        setAuthor("")
+        setUrl("")
+    }
+
     return (
         <>
         <form onSubmit={handleCreate}>

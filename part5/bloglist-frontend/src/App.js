@@ -15,10 +15,6 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
-
   const [message, setMessage] = useState("")
 
   useEffect(() => {
@@ -71,21 +67,11 @@ const App = () => {
     }
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
-
-    const returnedBlog = await blogService.createBlog({
-      title: title,
-      author: author,
-      url: url
-    })
-
+  const createBlogOnServer = async (newBlog) => {
+    const returnedBlog = await blogService.createBlog(newBlog)
     setBlogs(blogs.concat(returnedBlog))
-    setTitle("")
-    setAuthor("")
-    setUrl("")
 
-    setMessage(`a new blog ${title} by ${author} is added`)
+    setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} is added`)
     setTimeout(() => {
       setMessage("")
     }, 5000)
@@ -115,10 +101,7 @@ const App = () => {
 
         <h3>create new</h3>
         <Togglable buttonLabel="new note">
-          {CreateBlog(handleCreate,
-            title, setTitle,
-            author, setAuthor,
-            url, setUrl)}
+          <CreateBlog createBlogOnServer={createBlogOnServer} />
         </Togglable>
 
         {blogs.map(blog =>
