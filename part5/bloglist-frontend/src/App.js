@@ -142,7 +142,7 @@ const App = () => {
         {blogs.map(blog =>
           { 
             return (
-              <>
+              <div key={`div-${blog.id}`}>
                 <Blog key={blog.id} blog={blog} />
                 <Togglable key={`tg-${blog.id}`} buttonLabel="view">
                   <BlogDetail key={`bd-${blog.id}`} title={blog.title}
@@ -153,7 +153,7 @@ const App = () => {
                     likeBlog={likeBlog}
                     deleteBlog={deleteBlog}/>
                 </Togglable>
-              </>
+              </div>
             )
           }
         )}

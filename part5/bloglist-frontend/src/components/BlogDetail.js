@@ -1,10 +1,12 @@
+import PropTypes from "prop-types"
+
 const BlogDetail = ({title, author, url, likes, blog, likeBlog, deleteBlog}) => {
     const click = async () => {
         await likeBlog(blog)
     }
 
     const onDelete = async () => {
-        deleteBlog(blog)
+        await deleteBlog(blog)
     }
 
     const blogStyle = {
@@ -26,6 +28,16 @@ const BlogDetail = ({title, author, url, likes, blog, likeBlog, deleteBlog}) => 
         <button onClick={onDelete}>delete</button>
         </div>
     )
+}
+
+BlogDetail.propTypes = {
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    blog: PropTypes.object.isRequired,
+    likeBlog: PropTypes.func.isRequired,
+    deleteBlog: PropTypes.func.isRequired
 }
 
 export default BlogDetail
