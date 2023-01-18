@@ -1,6 +1,6 @@
-const BlogDetail = ({title, author, url, likes}) => {
-    const click = () => {
-        console.log("love me!")
+const BlogDetail = ({title, author, url, likes, blog, likeBlog}) => {
+    const click = async () => {
+        await likeBlog(blog)
     }
 
     const blogStyle = {

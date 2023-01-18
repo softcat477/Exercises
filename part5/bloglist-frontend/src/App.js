@@ -79,6 +79,22 @@ const App = () => {
     }, 5000)
   }
 
+  const likeBlog = async (blog) => {
+    // send PUT to server
+    await blogService.likeBlog({
+      title:blog.title,
+      author:blog.author,
+      url:blog.url,
+      likes:blog.likes+1,
+      user:blog.user.id
+    }, blog.id)
+
+    // Update likes
+    let tmp = [...blogs]
+    tmp.find(x=>x.id===blog.id).likes=blog.likes+1
+    setBlogs(tmp)
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -115,7 +131,9 @@ const App = () => {
                   <BlogDetail title={blog.title}
                     author={blog.author}
                     likes={blog.likes}
-                    url={blog.url}/>
+                    url={blog.url}
+                    blog={blog}
+                    likeBlog={likeBlog}/>
                 </Togglable>
               </>
             )
