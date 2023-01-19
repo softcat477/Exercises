@@ -18,7 +18,7 @@ const BlogDetail = ({ title, author, url, likes, blog, likeBlog, deleteBlog }) =
   }
 
   return (
-    <div style={ blogStyle } >
+    <div style={ blogStyle } className="blogDetail">
       <ul>
         <li key="title">Title : {title}</li>
         <li key="author">Author: {author}</li>
