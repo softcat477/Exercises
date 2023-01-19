@@ -3,21 +3,8 @@ import "@testing-library/jest-dom/extend-expect"
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
-import Blog from "./Blog"
 import BlogDetail from "./BlogDetail"
 import Togglable from "./Togglable"
-
-/*
-BlogDetail.propTypes = {
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
-  likes: PropTypes.number.isRequired,
-  blog: PropTypes.object.isRequired,
-  likeBlog: PropTypes.func.isRequired,
-  deleteBlog: PropTypes.func.isRequired
-}
-*/
 
 test ("Click to show a blog's url and likes", async () => {
     const blog = {
@@ -61,4 +48,63 @@ test ("Click to show a blog's url and likes", async () => {
     const blogDetail = container.querySelector(".blogDetail")
     expect(blogDetail).toHaveTextContent("http://url")
     expect(blogDetail).toHaveTextContent("-1")
+})
+
+test("Click like", async () => {
+    const blog = {
+        title: "title",
+        author: "author",
+        url: "http://url",
+        likes: -1
+    }
+    const likeBlogFn = jest.fn()
+    const deleteBlogFn = jest.fn()
+
+    const { container } = render(
+        <BlogDetail title={ blog.title }
+            author={ blog.author }
+            url={ blog.url }
+            likes={ blog.likes} 
+            blog={ blog }
+            likeBlog={ likeBlogFn }
+            deleteBlog={ deleteBlogFn } />
+    )
+
+    // click the button twice
+    const user = userEvent.setup()
+    const button = screen.getByText("like")
+    await user.click(button)
+    await user.click(button)
+
+    // Should hit the mocked function twice
+    expect(likeBlogFn.mock.calls).toHaveLength(2)
+})
+
+test("Click delete", async () => {
+    const blog = {
+        title: "title",
+        author: "author",
+        url: "http://url",
+        likes: -1
+    }
+    const likeBlogFn = jest.fn()
+    const deleteBlogFn = jest.fn()
+
+    const { container } = render(
+        <BlogDetail title={ blog.title }
+            author={ blog.author }
+            url={ blog.url }
+            likes={ blog.likes} 
+            blog={ blog }
+            likeBlog={ likeBlogFn }
+            deleteBlog={ deleteBlogFn } />
+    )
+
+    // click the button 
+    const user = userEvent.setup()
+    const button = screen.getByText("delete")
+    await user.click(button)
+
+    // Should hit the mocked function
+    expect(deleteBlogFn.mock.calls).toHaveLength(1)
 })
