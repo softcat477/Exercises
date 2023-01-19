@@ -24,6 +24,7 @@ const CreateBlog = ({ createBlogOnServer }) => {
           title <input type="text"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
+            id="title-input"
           />
         </div>
 
@@ -31,6 +32,7 @@ const CreateBlog = ({ createBlogOnServer }) => {
           author <input type="text"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
+            id="author-input"
           />
         </div>
 
@@ -38,6 +40,7 @@ const CreateBlog = ({ createBlogOnServer }) => {
           url <input type="text"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
+            id="url-input"
           />
         </div>
 
