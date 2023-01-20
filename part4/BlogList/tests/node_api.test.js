@@ -392,6 +392,23 @@ individual blog post. Use async/await.
 The application mostly needs to update the amount of likes for a blog post. You can implement this functionality the same way that we implemented updating notes in part 3.
 */
 test("Varify updating the information of a blog", async () => {
+    // First we need to login to get the toiken
+    const login_user = {
+        username: "root",
+        pwd: "sillyPwd"
+    }
+
+    const response_login = await api.post("/api/login")
+        .send(login_user)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    // Should get the token and the username as root
+    expect(response_login.body).toHaveProperty('token')
+    expect(response_login.body.username).toBe("root")
+
+    const token = response_login.body.token
+
     const original_blogs = await helper.blogsInDb()
     const blog_to_modify = original_blogs[0]
     let new_blog = {...blog_to_modify, 
@@ -402,6 +419,7 @@ test("Varify updating the information of a blog", async () => {
     }
 
     const result = await api.put(`/api/blogs/${blog_to_modify.id}`) 
+        .set("Authorization", "Bearer " + token)
         .send(new_blog)
         .expect(201)
         .expect("Content-Type", /application\/json/)
