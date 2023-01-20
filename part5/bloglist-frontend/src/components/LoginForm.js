@@ -3,7 +3,7 @@ const LoginForm = (handleLogin,
   password, setPassword) => {
   return (
     <>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} className="login-form">
         <div>
           username <input type="text"
             value={username}
