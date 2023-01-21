@@ -37,3 +37,20 @@ Cypress.Commands.add("login", ({ username, password }) => {
     cy.visit("http://localhost:3000")
   })
 })
+
+/*
+Create a blog with POST request
+- Expect user already logged in and store its token in localStorage
+*/
+Cypress.Commands.add("createBlog", ({ title, author, url }) => {
+  cy.request({
+    url: "http://localhost:8080/api/blogs",
+    method: "POST",
+    body: { title, author, url },
+    headers: {
+      "Authorization": `bearer ${JSON.parse(localStorage.getItem('loggedUser')).token}`
+    }
+  })
+
+  cy.visit("http://localhost:3000")
+})
