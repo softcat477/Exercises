@@ -59,5 +59,34 @@ describe("Blog app", () => {
       // and an error message should show up
       cy.contains("Wrong Credential")
     })
+
+    describe("When logged in", function() {
+      beforeEach(function() {
+        // bypass the login form and login with POST
+        cy.login({username:"wakuwaku", pwd:"1234"})
+      })
+  
+      it("A blog can be created", function() {
+        const title = "Grand Confort LC-2 Petit Modele"
+        const author = "Le Corbusier"
+        const url = "http://spy-family"
+
+        // Create a blog
+        cy.get("#toggle-show").click()
+        cy.get("#title-input").type(title)
+        cy.get("#author-input").type(author)
+        cy.get("#url-input").type(url)
+        cy.get("#create-button").click()
+
+        // The blog should (1) be added to the list
+        //  (2) contains title and author
+        //  (3) hide url
+        cy.get(".blog")
+          .should("have.length", 1)
+          .should("contain", title)
+          .should("contain", author)
+          .should("not.contain", url)
+      })
+    })
   })
 })
