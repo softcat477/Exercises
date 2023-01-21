@@ -131,7 +131,7 @@ const App = () => {
       { user !== null &&
           <div>
             <p>
-              {user.name} logged in <button onClick={handleLogout}>logout</button>
+              {user.name} logged in <button onClick={handleLogout} id="logout-button">logout</button>
             </p>
 
             <h3>create new</h3>
