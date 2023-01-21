@@ -13,7 +13,7 @@ describe("Blog app", () => {
     cy.get("form").contains(/(username).*(password).*(login)/)
   })
 
-  describe("Login using the form", function() {
+  describe("Login", function() {
     beforeEach(function() {
       // GOAL: Test the login foirm
       // 1. login and logout
@@ -60,7 +60,7 @@ describe("Blog app", () => {
       cy.contains("Wrong Credential")
     })
 
-    describe("When logged in", function() {
+    describe("when logged in", function() {
       beforeEach(function() {
         // bypass the login form and login with POST
         cy.login({username:"wakuwaku", pwd:"1234"})
@@ -86,6 +86,51 @@ describe("Blog app", () => {
           .should("contain", title)
           .should("contain", author)
           .should("not.contain", url)
+      })
+
+      describe("when a blog has been created", function(){
+        beforeEach(function() {
+          const title = "Grand Confort LC-2 Petit Modele"
+          const author = "Le Corbusier"
+          const url = "http://spy-family"
+
+          cy.createBlog({
+            title:title,
+            author:author,
+            url:url
+          })
+
+          cy.wrap(title).as("title")
+          cy.wrap(author).as("author")
+          cy.wrap(url).as("url")
+        })
+
+        it("click view to show blog details and click like", function() {
+          // We only have one blog
+          cy.get(".blog ~ .togglable").as("blogDetail")
+
+          // Before clicking the view button, blog detail should not show up
+          cy.get("@blogDetail")
+            .should("have.css", "display", "none")
+
+          // Click the first view button
+          cy.contains("view").click()
+
+          // and we should see blog details incluiding title, author, url, and like
+          cy.get("@blogDetail")
+            .should("contain", `Title : ${this.title}`)
+            .and("contain", `Author: ${this.author}`)
+            .and("contain", `Url   : ${this.url}`)
+            .and("contain", "likes : 0")
+
+          // Click the first blog detail's like button
+          cy.get("@blogDetail").first().find("#like-button").click()
+
+          // and the likes should be 1
+          cy.get("@blogDetail")
+            .first()
+            .and("contain", "likes : 1")
+        })
       })
     })
   })

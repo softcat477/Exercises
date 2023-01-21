@@ -23,7 +23,7 @@ const BlogDetail = ({ title, author, url, likes, blog, likeBlog, deleteBlog }) =
         <li key="title">Title : {title}</li>
         <li key="author">Author: {author}</li>
         <li key="url">Url   : {url}</li>
-        <li key="likes">likes : {likes} <button onClick={click}>like</button></li>
+        <li key="likes">likes : {likes} <button onClick={click} id="like-button">like</button></li>
       </ul>
       <button onClick={onDelete}>delete</button>
     </div>
