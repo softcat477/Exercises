@@ -131,6 +131,23 @@ describe("Blog app", () => {
             .first()
             .and("contain", "likes : 1")
         })
+
+        it("delete the blog", function() {
+          // We only have one blog
+          cy.get(".blog ~ .togglable").as("blogDetail")
+
+          // If we click the first view button
+          cy.contains("view").click()
+
+          // and delete the blog
+          cy.get("@blogDetail")
+            .first()
+            .find("#delete-button")
+            .click()
+
+          // then there's no blog left
+          cy.get(".blog").should("not.exist")
+        })
       })
     })
   })
