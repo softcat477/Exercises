@@ -45,7 +45,6 @@ describe("Blog app", () => {
       cy.get("html").should("not.contain", `${this.user.name} logged in`)
       // and the login form needs to show up again
       cy.contains(".login-form", /(username).*(password).*(login)/)
-      cy.get("form").contains(/(username).*(password).*(login)/)
     })
 
     it("succeeds with correct credentials", function() {
@@ -63,9 +62,9 @@ describe("Blog app", () => {
     describe("when logged in", function() {
       beforeEach(function() {
         // bypass the login form and login with POST
-        cy.login({username:"wakuwaku", pwd:"1234"})
+        cy.login({ username:"wakuwaku", pwd:"1234" })
       })
-  
+
       it("A blog can be created", function() {
         const title = "Grand Confort LC-2 Petit Modele"
         const author = "Le Corbusier"
@@ -83,9 +82,9 @@ describe("Blog app", () => {
         //  (3) hide url
         cy.get(".blog")
           .should("have.length", 1)
-          .should("contain", title)
-          .should("contain", author)
-          .should("not.contain", url)
+          .and("contain", title)
+          .and("contain", author)
+          .and("not.contain", url)
       })
 
       describe("when a blog has been created", function(){

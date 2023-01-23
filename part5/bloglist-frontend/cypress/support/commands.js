@@ -28,10 +28,10 @@
 Login using POST request
 - bypass the login UI
 */
-Cypress.Commands.add("login", ({ username, password }) => {
+Cypress.Commands.add("login", ({ username, pwd }) => {
   cy.request("POST", "http://localhost:8080/api/login", {
-    username: "wakuwaku",
-    pwd: "1234"
+    username: username,
+    pwd: pwd
   }).then(response => {
     localStorage.setItem("loggedUser", JSON.stringify(response.body))
     cy.visit("http://localhost:3000")
@@ -48,7 +48,7 @@ Cypress.Commands.add("createBlog", ({ title, author, url }) => {
     method: "POST",
     body: { title, author, url },
     headers: {
-      "Authorization": `bearer ${JSON.parse(localStorage.getItem('loggedUser')).token}`
+      "Authorization": `bearer ${JSON.parse(localStorage.getItem("loggedUser")).token}`
     }
   })
 
