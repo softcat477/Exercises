@@ -149,6 +149,68 @@ describe("Blog app", () => {
           cy.get(".blog").should("not.exist")
         })
       })
+
+      describe("when three blog has been created", function(){
+        beforeEach(function() {
+          const title_1st = "Grand Confort LC-2 Petit Modele"
+          const author_1st = "Le Corbusier"
+          const url_1st = "http://spy-family"
+
+          cy.createBlog({
+            title:title_1st,
+            author:author_1st,
+            url:url_1st
+          })
+
+          const title_2nd = "Marshmallow Sofa"
+          const author_2nd = "Irving Harper"
+          const url_2nd = "http://spy-family"
+
+          cy.createBlog({
+            title:title_2nd,
+            author:author_2nd,
+            url:url_2nd
+          })
+
+          const title_3rd = "La Chaise"
+          const author_3rd = "CGarler and Ray Eames"
+          const url_3rd = "http://spy-family"
+
+          cy.createBlog({
+            title:title_3rd,
+            author:author_3rd,
+            url:url_3rd
+          })
+
+          cy.wrap(title_1st).as("title_1st")
+          cy.wrap(title_2nd).as("title_2nd")
+          cy.wrap(title_3rd).as("title_3rd")
+        })
+
+        it("three blogs should be displayed in descending oreder", function () {
+          // first blog: 3 likes, second blog: 2 likes, third blog: 1 likes
+          cy.multiLikes({
+            blog_title: this.title_3rd,
+            like_count: 1
+          })
+
+          cy.multiLikes({
+            blog_title: this.title_2nd,
+            like_count: 2
+          })
+
+          cy.multiLikes({
+            blog_title: this.title_1st,
+            like_count: 3
+          })
+
+          // The blog should be sorted in descending order
+          cy.get(".blog").eq(0).should("contain", this.title_1st)
+          cy.get(".blog").eq(1).should("contain", this.title_2nd)
+          cy.get(".blog").eq(2).should("contain", this.title_3rd)
+
+        })
+      })
     })
   })
 })
