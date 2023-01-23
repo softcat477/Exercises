@@ -54,3 +54,32 @@ Cypress.Commands.add("createBlog", ({ title, author, url }) => {
 
   cy.visit("http://localhost:3000")
 })
+
+/*
+Give a blog likes multiple times
+1. Search <blog_title> and open its blog detail
+2. Click like <like_count> times
+3. Close the blog
+*/
+Cypress.Commands.add("multiLikes", ({ blog_title, like_count }) => {
+  // 1. Click view to show the blog detail
+  cy.contains(blog_title).next().contains("view").click()
+
+  // 2. Get the togglable blog detail and the like button
+  cy.contains(blog_title).next().next().as("opened_blog")
+  cy.get("@opened_blog")
+    .find("#like-button")
+    .as("like-button")
+
+  // 3. Click likes multiple times
+  for (let i = 0; i < like_count; i++){
+    cy.get("@like-button")
+      .click()
+    cy.wait(100)
+  }
+
+  // Close the blog detail
+  cy.get("@opened_blog")
+    .find("#toggle-hide")
+    .click()
+})
