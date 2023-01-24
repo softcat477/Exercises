@@ -31,6 +31,9 @@ const reducer = (state = initialState, action) => {
 
       return state.map(n => n.id === id ? changed_note : n)
     }
+    case "ADD": {
+      return state.concat(action.data)
+    }
     default:
       return state
   }
@@ -43,5 +46,16 @@ const getVoteAction = (id) => {
   }
 }
 
+const getAddAction = (content) => {
+  return {
+    type: 'ADD',
+    data: {
+      content: content,
+      id: getId(),
+      votes: 0
+    }
+  }
+}
+
 export default reducer
-export { getVoteAction }
+export { getVoteAction, getAddAction }
