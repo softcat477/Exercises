@@ -18,6 +18,6 @@ describe('notificationReducer', () => {
     deepFreeze(state)
     const newState = notificationReducer(state, clearNotificationAction())
 
-    expect(newState).toBe("")
+    expect(newState).toBe("Hoi!")
   })
 })

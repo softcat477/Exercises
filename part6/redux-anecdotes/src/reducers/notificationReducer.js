@@ -11,7 +11,7 @@ const notificationSlice = createSlice(
         return state
       },
       clearNotificationAction: (state, action) => {
-        state = ""
+        state = "Hoi!"
         return state
       }
     }
