@@ -16,7 +16,7 @@ const Anecdote = ({anecdote, handleClick}) => {
 }
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => {
-    let sorted_state = [...state]
+    let sorted_state = [...state.notes]
     sorted_state = sorted_state.sort((a, b) => b.votes - a.votes)
     return sorted_state})
 
