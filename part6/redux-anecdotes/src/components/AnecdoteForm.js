@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux"
 import { addNotes } from "../reducers/anecdoteReducer"
-import { addNotificationAction } from "../reducers/notificationReducer"
+import { addNotification } from "../reducers/notificationReducer"
 
 const AnecdoteForm = (props) => {
   const dispatch = useDispatch()
@@ -11,7 +11,7 @@ const AnecdoteForm = (props) => {
 
     dispatch(addNotes(content))
 
-    dispatch(addNotificationAction(`Add : ${content}`))
+    dispatch(addNotification(`Add : ${content}`, 2000))
     event.target.note.value = ''
   }
 

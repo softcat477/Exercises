@@ -18,5 +18,18 @@ const notificationSlice = createSlice(
   }
 )
 
+/*
+Show <content> on notification and clear the notification afger <timeout_interval> ms.
+*/
+const addNotification = (content, timeout_interval) => {
+  return async dispatch => {
+    dispatch(addNotificationAction(content))
+    setTimeout(() => {
+      dispatch(clearNotificationAction())
+    }, timeout_interval)
+  }
+}
+
 export default notificationSlice.reducer
 export const {addNotificationAction, clearNotificationAction} = notificationSlice.actions
+export { addNotification }
