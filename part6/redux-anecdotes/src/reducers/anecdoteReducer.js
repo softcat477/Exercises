@@ -18,6 +18,7 @@
 //}
 
 //const initialState = anecdotesAtStart.map(asObject)
+import noteService from '../services/notes'
 
 const reducer = (state = [], action) => {
   switch (action.type) {
@@ -73,5 +74,13 @@ const getSetAction = (content) => {
   }
 }
 
+// To move communication to server outside of Components (the App component)
+const setNotes = () => {
+  return async dispatch => {
+    const notes = await noteService.getAll()
+    dispatch(getSetAction(notes))
+  }
+}
+
 export default reducer
-export { getVoteAction, getAddAction, getSetAction }
+export { getVoteAction, getAddAction, getSetAction, setNotes }
