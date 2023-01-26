@@ -26,7 +26,13 @@ describe('reducer', () => {
   test('add a note', () => {
     // At first we have no notes
     const state = []
-    const action = getAddAction('The Foger familyu welcome Yuri into their home')
+    const action = getAddAction(
+      {
+        content: 'The Foger familyu welcome Yuri into their home',
+        id: 21,
+        votes: 0
+      }
+    )
 
     // We add a note
     deepFreeze(state)
