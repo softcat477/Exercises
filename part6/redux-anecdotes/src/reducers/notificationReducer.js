@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+let timeout_id = null
+
 const notificationSlice = createSlice(
   {
     name: 'notification',
@@ -24,8 +26,18 @@ Show <content> on notification and clear the notification afger <timeout_interva
 const addNotification = (content, timeout_interval) => {
   return async dispatch => {
     dispatch(addNotificationAction(content))
-    setTimeout(() => {
+
+    // If there's a on-going timeout, cancel it, or else when setting a series of notifications,
+    // we will get some unexpected clear action
+    if (timeout_id !== null){
+      clearTimeout(timeout_id)
+      timeout_id = null
+    }
+
+    timeout_id = setTimeout(() => {
+      // After <timeout_interval> ms, clear notification text and timeout_id
       dispatch(clearNotificationAction())
+      timeout_id = null
     }, timeout_interval)
   }
 }
