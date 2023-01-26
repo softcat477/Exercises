@@ -17,4 +17,22 @@ const createNew = async(content) => {
   return response.data
 }
 
-export default { getAll, createNew }
+const addVote = async({id, new_vote}) => {
+  /*
+  id: int 
+  new_vote: int
+  */
+  // Get notes from server and search the one with the matched id
+  const notes_response = await axios.get(baseUrl)
+  const notes = notes_response.data
+  const note = notes.find(n => n.id === id)
+
+  // GET to update its votes
+  const response = await axios.put(`${baseUrl}/${id}`, {
+    ...note,
+    votes: new_vote
+  })
+  return response.data
+}
+
+export default { getAll, createNew, addVote }

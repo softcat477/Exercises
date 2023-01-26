@@ -89,5 +89,17 @@ const addNotes = (content) => {
   }
 }
 
+const addVote = (id, new_vote) => {
+  return async dispatch => {
+    // Tell the server to update the vote
+    const updated_note = await noteService.addVote({
+      id: id,
+      new_vote: new_vote
+    })
+    // dispatch to update votes
+    dispatch(getVoteAction(updated_note.id))
+  }
+}
+
 export default reducer
-export { getVoteAction, getAddAction, getSetAction, setNotes, addNotes }
+export { getVoteAction, getAddAction, getSetAction, setNotes, addNotes, addVote }
