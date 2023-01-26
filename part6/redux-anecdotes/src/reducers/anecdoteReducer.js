@@ -82,5 +82,12 @@ const setNotes = () => {
   }
 }
 
+const addNotes = (content) => {
+  return async dispatch => {
+    const new_note = await noteService.createNew(content)
+    dispatch(getAddAction(new_note))
+  }
+}
+
 export default reducer
-export { getVoteAction, getAddAction, getSetAction, setNotes }
+export { getVoteAction, getAddAction, getSetAction, setNotes, addNotes }
