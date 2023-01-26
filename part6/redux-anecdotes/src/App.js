@@ -3,7 +3,21 @@ import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
 import Filter from './components/Filter'
 
+import noteService from './services/notes'
+import { useDispatch } from 'react-redux'
+import { getSetAction } from './reducers/anecdoteReducer'
+import { useEffect } from 'react'
+
 const App = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    noteService.getAll()
+      .then(notes => {
+        dispatch(getSetAction(notes))
+      })
+  }, [dispatch])
+
   return (
     <div>
       <h2>Anecdotes</h2>
