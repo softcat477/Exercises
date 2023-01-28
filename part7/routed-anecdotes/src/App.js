@@ -76,9 +76,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content = useField('text', 'content')
-  const author = useField('text', 'author')
-  const info = useField('text', 'info')
+  const {onClear:clearContent, ...content} = useField('text', 'content')
+  const {onClear:clearAuthor, ...author} = useField('text', 'author')
+  const {onClear:clearInfo, ...info} = useField('text', 'info')
 
   const navigate = useNavigate()
 
@@ -97,24 +97,31 @@ const CreateNew = (props) => {
       props.setNotification('')
     }, 2500)
   }
+  
+  const handleReset = () => {
+    clearContent()
+    clearAuthor()
+    clearInfo()
+  }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
           <input {...content} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author}/>
         </div>
         <div>
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset">reset</button>
       </form>
     </div>
   )

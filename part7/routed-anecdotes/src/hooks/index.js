@@ -5,11 +5,15 @@ const useField = (type, name) => {
   const onChange = (event) => {
     setValue(event.target.value)
   }
+  const onClear = () => {
+    setValue("")
+  }
 
   return {
     type,
     value,
     onChange,
+    onClear,
     name
   }
 }
