@@ -118,7 +118,14 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+}
 
+const Home = () => {
+  return (
+    <>
+      <h2>Hoi!</h2>
+    </>
+  )
 }
 
 const App = () => {
@@ -175,6 +182,7 @@ const App = () => {
         <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
         <Route path="/create-new" element={<CreateNew addNew={addNew} setNotification={setNotification}/>} />
         <Route path="/about" element={<About />} />
+        <Route path="/" element={<Home />} />
       </Routes>
       
       <Footer />
