@@ -11,13 +11,15 @@ import Togglable from "./components/Togglable"
 
 import BlogDetail from "./components/BlogDetail"
 
+import { useDispatch } from "react-redux"
+import { setNotificationAction, clearNotificationAction } from "./reducers/notificationReducer"
+
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-
-  const [message, setMessage] = useState("")
 
   const updateBlogs = (blogs) => {
     let sort_blogs = [...blogs]
@@ -68,9 +70,9 @@ const App = () => {
     }
     catch (exception) {
       console.error("Wrong Credentials")
-      setMessage("Wrong Credential")
+      dispatch(setNotificationAction("Wrong Credential"))
       setTimeout(() => {
-        setMessage("")
+        dispatch(clearNotificationAction())
       }, 5000)
     }
   }
@@ -79,9 +81,9 @@ const App = () => {
     const returnedBlog = await blogService.createBlog(newBlog)
     updateBlogs(blogs.concat(returnedBlog))
 
-    setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} is added`)
+    dispatch(setNotificationAction(`a new blog ${returnedBlog.title} by ${returnedBlog.author} is added`))
     setTimeout(() => {
-      setMessage("")
+      dispatch(clearNotificationAction())
     }, 5000)
   }
 
@@ -122,7 +124,7 @@ const App = () => {
 
       <h2>blogs</h2>
 
-      <Notification key="notification" message={message} />
+      <Notification key="notification" />
 
       {user===null && LoginForm(handleLogin,
         username, setUsername,
